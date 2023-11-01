@@ -53,8 +53,8 @@ test-cover: deps
 	go tool cover -func=coverage.out | grep total
 	rm -f coverage.out
 	
-.PHONY: fast-build
-fast-build: deps 
+.PHONY: build
+build: deps 
 	$(info #Building binaries...)
 	$(shell $(BUILD_ENVPARMS) go build -o bin/$(CMD) ./cmd/$(CMD))
 	@echo
