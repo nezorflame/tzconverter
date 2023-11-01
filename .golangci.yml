@@ -16,58 +16,82 @@ output:
   print-linter-name: true
 
 linters-settings:
+  gocritic:
+    disabled-checks:
+      - exitAfterDefer
   goconst:
     min-len: 2
     min-occurrences: 2
   govet:
     check-shadowing: true
-  dupl:
-    threshold: 100
+  revive:
+    rules:
+      # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#var-naming
+      - name: var-naming
+        disabled: true
+  gomodguard:
+    blocked:
+      modules:
+        - github.com/pkg/errors:
+            recommendations:
+              - errors
+        - github.com/go-errors/errors:
+            recommendations:
+              - errors
+
+  gci:
+    sections:
+      - standard # Standard section: captures all standard packages.
+      - default # Default section: contains all imports that could not be matched to another section type.
+      - prefix(github.com/nezorflame/tzconverter) # Custom section: groups all imports with the specified Prefix.
+      # - blank # Blank section: contains all blank imports. This section is not present unless explicitly enabled.
+      # - dot # Dot section: contains all dot imports. This section is not present unless explicitly enabled.
+    skip-generated: false
+    custom-order: true
+  gofumpt:
+    module-path: github.com/nezorflame/tzconverter
+    extra-rules: true
 
 linters:
   disable-all: true
   enable:
-    - revive
-    - govet
     - errcheck
-    - ineffassign
-    - typecheck
+    - errorlint
+    - gocheckcompilerdirectives
     - goconst
+    - gocritic
+    - gomodguard
     - gosec
-    - goimports
     - gosimple
-    - unused
-    - staticcheck
+    - govet
+    - ineffassign
     - makezero
-    - whitespace
-    # - dupl # - it's very slow, enable if you really know why you need it
+    - nilnil
+    - nolintlint
+    - revive
+    - staticcheck
+    - tenv
+    - thelper
+    - tparallel
+    - typecheck
+    - unconvert
+    - unused
+    - usestdlibvars
+    - wastedassign
+    - gci # autofixable
+    - gofumpt # autofixable
+    - misspell # autofixable
+    - whitespace # autofixable
+    # - godox # enable before pushing to avoid TODOs
 
 issues:
-  # Independently from option `exclude` we use default exclude patterns,
-  # it can be disabled by this option. To list all
-  # excluded by default patterns execute `golangci-lint run --help`.
-  # Default value for this option is true.
-  exclude-use-default: false
   # List of regexps of issue texts to exclude, empty list by default.
   # But independently from this option we use default exclude patterns,
   # it can be disabled by `exclude-use-default: false`. To list all
   # excluded by default patterns execute `golangci-lint run --help`
   exclude:
-    # _ instead of err checks
-    - G104
-    # Close() on types - make sure to know when it's OK to ignore!
-    - G307
-    # for "public interface + private struct implementation" cases only!
-    - "unexported-return: exported func .* returns unexported type .*, which can be annoying to use"
-    # can be removed in the development phase
-    - (comment on exported (method|function|type|const|var)|should have( a package)? comment|comment should be of the form)
-    # not for the active development - can be removed in the stable phase
-    - should have a package comment, unless it's in another file for this package
-    - don't use an underscore in package name
-    # errcheck: Almost all programs ignore errors on these functions and in most cases it's ok
-    - should check returned error before deferring
-    - "Error return value of `.*(Close|Remove)` is not checked"
-    - "string `test` has * occurrences, make it a constant"
+    # error shadowing is mostly OK
+    - 'shadow: declaration of "err"'
   # Excluding configuration per-path, per-linter, per-text and per-source
   exclude-rules:
     # Exclude some linters from running on tests files.

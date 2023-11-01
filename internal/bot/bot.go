@@ -4,13 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"strconv"
 	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/nezorflame/example-telegram-bot/internal/bolt"
 	"github.com/spf13/viper"
-	"golang.org/x/exp/slog"
+
+	"github.com/nezorflame/tzconverter/internal/bolt"
 )
 
 type bot struct {
@@ -116,7 +117,7 @@ func (b *bot) reply(chatID int64, msgID int, text string) {
 
 func (b *bot) parseChatMessage(ctx context.Context, msg *tgbotapi.Message) {
 	log := b.log.With("chat_id", strconv.FormatInt(msg.Chat.ID, 10), "user_id", msg.From.ID)
-	log.DebugCtx(ctx, "Parsing new chat message", "message", msg.Text)
+	log.DebugContext(ctx, "Parsing new chat message", "message", msg.Text)
 }
 
 func (b *bot) isBotMention(msg *tgbotapi.Message) bool {

@@ -1,12 +1,11 @@
-module github.com/nezorflame/example-telegram-bot
+module github.com/nezorflame/tzconverter
 
-go 1.20
+go 1.21
 
 require (
-	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
+	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.2-0.20221020003552-4126fa611266
 	github.com/spf13/viper v1.15.0
 	go.etcd.io/bbolt v1.3.7
-	golang.org/x/exp v0.0.0-20230315142452-642cacee5cc0
 )
 
 require (

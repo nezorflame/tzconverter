@@ -1,5 +1,4 @@
-CMD:=example-telegram-bot
-MODULE:=github.com/nezorflame/$(CMD)
+MODULE:=github.com/nezorflame/tzconverter
 PKG_LIST:=$(shell go list -f '{{.Dir}}' ./...)
 GIT_HASH?=$(shell git log --format="%h" -n 1 2> /dev/null)
 GIT_BRANCH?=$(shell git branch 2> /dev/null | grep '*' | cut -f2 -d' ')
@@ -20,12 +19,6 @@ export PATH:=$(PWD)/bin:$(PATH)
 .PHONY: deps
 deps:
 	$(info #Installing dependencies...)
-	go mod download
-
-# install project dependencies with tidy
-.PHONY: tidy
-tidy:
-	$(info #Installing dependencies and cleaning up...)
 	go mod tidy
 
 .PHONY: update
@@ -38,18 +31,8 @@ generate:
 	$(info #Generating code...)
 	go generate ./...
 
-.PHONY: imports
-imports:
-	$(info #Formatting code imports...)
-	gosimports -local $(MODULE) -w $(PKG_LIST)
-
-.PHONY: format
-format: imports
-	$(info #Formatting code...)
-	gofumpt -w $(PKG_LIST)
-
 .PHONY: refresh
-refresh: generate format deps
+refresh: tools deps generate format
 
 # run all tests
 .PHONY: test
@@ -68,7 +51,7 @@ test-cover: deps
 .PHONY: fast-build
 fast-build: deps 
 	$(info #Building binaries...)
-	$(shell $(BUILD_ENVPARMS) go build -o bin/$(CMD) .)
+	$(shell $(BUILD_ENVPARMS) go build -o bin/tzconverter ./cmd/tzconverter)
 	@echo
 
 .PHONY: build
@@ -84,10 +67,15 @@ install: deps
 .PHONY: tools
 tools:
 	$(info #Installing tools...)
-	cd tools && go generate -tags tools
+	cd tools && go mod tidy && go generate -tags tools
 
 # run linter
 .PHONY: lint
 lint:
 	$(info #Running lint...)
 	golangci-lint run ./...
+
+.PHONY: format
+format:
+	$(info #Formatting code through golangci-lint...)
+	golangci-lint run --fix ./...

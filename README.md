@@ -1,4 +1,4 @@
-# example-telegram-bot [![CircleCI](https://circleci.com/gh/nezorflame/example-telegram-bot/tree/main.svg?style=svg)](https://circleci.com/gh/nezorflame/example-telegram-bot/tree/main) [![Go Report Card](https://goreportcard.com/badge/github.com/nezorflame/example-telegram-bot)](https://goreportcard.com/report/github.com/nezorflame/example-telegram-bot) [![GolangCI](https://golangci.com/badges/github.com/nezorflame/example-telegram-bot.svg)](https://golangci.com/r/github.com/nezorflame/example-telegram-bot) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnezorflame%2Fexample-telegram-bot.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnezorflame%2Fexample-telegram-bot?ref=badge_shield)
+# tzconverter [![CircleCI](https://circleci.com/gh/nezorflame/tzconverter/tree/main.svg?style=svg)](https://circleci.com/gh/nezorflame/tzconverter/tree/main) [![Go Report Card](https://goreportcard.com/badge/github.com/nezorflame/tzconverter)](https://goreportcard.com/report/github.com/nezorflame/tzconverter) [![GolangCI](https://golangci.com/badges/github.com/nezorflame/tzconverter.svg)](https://golangci.com/r/github.com/nezorflame/tzconverter) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnezorflame%2Ftzconverter.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnezorflame%2Ftzconverter?ref=badge_shield)
 
 Example bot template for Telegram.
 
@@ -20,11 +20,11 @@ This bot uses:
 - [tgbotapi](https://pkg.go.dev/github.com/go-telegram-bot-api/telegram-bot-api/v5) package to work with Telegram API
 - [bbolt](https://pkg.go.dev/go.etcd.io/bbolt) for local database
 - [viper](https://pkg.go.dev/github.com/spf13/viper) for configuration
-- [slog](https://pkg.go.dev/golang.org/x/exp/slog) for logging
+- [slog](https://pkg.go.dev/log/slog) for logging
 
 ## Structure
 
-This project mostly adheres to the [Project Layout](https://github.com/golang-standards/project-layout) structure, excluding `pkg` folders.
+This project mostly adheres to the [Project Layout](https://github.com/golang-standards/project-layout) structure, skipping the `pkg` folder.
 
 `internal` package holds the private libraries:
 
@@ -42,4 +42,4 @@ To add another custom command handler, you can:
 
 ## License
 
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnezorflame%2Fexample-telegram-bot.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnezorflame%2Fexample-telegram-bot?ref=badge_large)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnezorflame%2Ftzconverter.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnezorflame%2Ftzconverter?ref=badge_large)
