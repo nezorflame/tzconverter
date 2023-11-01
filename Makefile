@@ -1,7 +1,7 @@
-MODULE:=github.com/nezorflame/tzconverter
+CMD:=tzconverter
+MODULE:=github.com/nezorflame/$(CMD)
 PKG_LIST:=$(shell go list -f '{{.Dir}}' ./...)
 GIT_HASH?=$(shell git log --format="%h" -n 1 2> /dev/null)
-GIT_BRANCH?=$(shell git branch 2> /dev/null | grep '*' | cut -f2 -d' ')
 GIT_TAG:=$(shell git describe --exact-match --abbrev=0 --tags 2> /dev/null)
 APP_VERSION?=$(if $(GIT_TAG),$(GIT_TAG),$(shell git describe --all --long HEAD 2> /dev/null))
 GO_VERSION:=$(shell go version)
@@ -11,6 +11,11 @@ export GO111MODULE=on
 export GOPROXY=https://proxy.golang.org
 BUILD_ENVPARMS:=CGO_ENABLED=0
 BUILD_TS:=$(shell date +%FT%T%z)
+PLATFORMS:=darwin linux windows
+ARCHITECTURES:=386 amd64 arm arm64
+
+# Setup linker flags option for build that interoperate with variable names in src code
+LDFLAGS=-ldflags "-X main.Version=${APP_VERSION} -X main.Build=${GIT_HASH}"
 
 PWD:=$(PWD)
 export PATH:=$(PWD)/bin:$(PATH)
@@ -51,16 +56,20 @@ test-cover: deps
 .PHONY: fast-build
 fast-build: deps 
 	$(info #Building binaries...)
-	$(shell $(BUILD_ENVPARMS) go build -o bin/tzconverter ./cmd/tzconverter)
+	$(shell $(BUILD_ENVPARMS) go build -o bin/$(CMD) ./cmd/$(CMD))
 	@echo
 
-.PHONY: build
-build: fast-build test
+.PHONY: build-all
+build-all:
+	$(foreach GOOS, $(PLATFORMS),\
+	$(foreach GOARCH, $(ARCHITECTURES), $(shell export GOOS=$(GOOS); export GOARCH=$(GOARCH); go build -o bin/$(CMD)-$(GOOS)-$(GOARCH) ./cmd/$(CMD))))
+	$(foreach GOARCH, $(ARCHITECTURES), $(shell mv bin/$(CMD)-windows-$(GOARCH) bin/$(CMD)-windows-$(GOARCH).exe))
+	@echo
 
 .PHONY: install
 install: deps
 	$(info #Installing binaries...)
-	$(shell $(BUILD_ENVPARMS) go install ./cmd/tzconverter)
+	$(shell $(BUILD_ENVPARMS) go install ./cmd/$(CMD))
 	@echo
 
 # install tools binary: linter, mockgen, etc.
