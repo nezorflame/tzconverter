@@ -55,12 +55,12 @@ fast-build: deps
 	@echo
 
 .PHONY: build
-build: deps fast-build test
+build: fast-build test
 
 .PHONY: install
 install: deps
 	$(info #Installing binaries...)
-	$(shell $(BUILD_ENVPARMS) go install .)
+	$(shell $(BUILD_ENVPARMS) go install ./cmd/tzconverter)
 	@echo
 
 # install tools binary: linter, mockgen, etc.
