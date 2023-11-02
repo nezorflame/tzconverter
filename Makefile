@@ -59,10 +59,10 @@ build: deps
 	$(shell $(BUILD_ENVPARMS) go build -o bin/$(CMD) ./cmd/$(CMD))
 	@echo
 
-.PHONY: build-all
-build-all:
+.PHONY: build-release
+build-release:
 	$(foreach GOOS, $(PLATFORMS),\
-	$(foreach GOARCH, $(ARCHITECTURES), $(shell export GOOS=$(GOOS); export GOARCH=$(GOARCH); go build -o bin/$(CMD)-$(GOOS)-$(GOARCH) ./cmd/$(CMD))))
+	$(foreach GOARCH, $(ARCHITECTURES), $(shell export GOOS=$(GOOS); export GOARCH=$(GOARCH); $(BUILD_ENVPARMS) go build -ldflags "-s -w" -o bin/$(CMD)-$(GOOS)-$(GOARCH)  ./cmd/$(CMD))))
 	$(foreach GOARCH, $(ARCHITECTURES), $(shell mv bin/$(CMD)-windows-$(GOARCH) bin/$(CMD)-windows-$(GOARCH).exe))
 	@echo
 
